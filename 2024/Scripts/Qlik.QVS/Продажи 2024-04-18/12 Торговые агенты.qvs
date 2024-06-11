@@ -1,0 +1,99 @@
+[ТорговыеАгентыPrep]:
+select distinct
+	 u._IDRRef                        as "ТорговыйАгент_Key_Tmp" /* временное поле для сопоставления с УТ (чтоб без дуюликатов) */
+    ,u._IDRRef                        as "ТорговыйАгент_Key"
+    ,u._Fld65835                      as "Район" /*в 1С: КодТорговогоАгента*/
+    ,u._Description                   as "ТорговыйАгент"
+    ,u._Fld58675RRef                  as "Подразделение_Key"    
+    ,s._Description                   as "Подразделение"
+    ,s._Fld62905RRef                  as "ТекущийРуководитель_Key"
+    ,f._Description                   as "Руководитель"
+from      erp._Reference425           as u /*"Спр_Пользователи"*/
+left join erp._Reference620           as s /*Спр_СтруктураПредприятия*/ 
+       on u._Fld58675RRef = s._IDRRef  /*Подразделение_Key*/ 
+left join erp._Reference682           as f /*Спр_ФизическиеЛица*/
+       on s._Fld62905RRef = f._IDRRef  /*ТекущийРуководитель_Key*/;
+// if vEnableStoreToGD = True() then
+// 	store [ТорговыеАгентыPrep] into 'lib://GDT/1_nq7Dc3ROB_w-VVh6yzqUUAo5B8CIupA/Qlik.2020_2023.ТорговыеАгентыPrep.csv' (txt);
+// end if;
+// Из УТ грузим только тех, кого нет в ERP
+concatenate([ТорговыеАгентыPrep])
+load * from 'lib://Data:DataFiles/2020_2023/ТорговыеАгентыPrep.qvd' (qvd)
+where not exists ([ТорговыйАгент_Key_Tmp])
+;
+drop field [ТорговыйАгент_Key_Tmp]; //удаляем временное поле
+;
+// // УТ: основа
+// load * from 'lib://Data:DataFiles/2020_2023/ТорговыеАгентыPrep.qvd' (qvd)
+// ;
+// // ERP грузим только тех, кого нет в УТ
+// concatenate([ТорговыеАгентыPrep])
+// load *
+// where not exists ([ТорговыйАгент_Key_Tmp])
+// ;
+// select distinct
+// 	 u._IDRRef                        as "ТорговыйАгент_Key_Tmp" /* временное поле для сопоставления с УТ (чтоб без дуюликатов) */
+//     ,u._IDRRef                        as "ТорговыйАгент_Key"
+//     ,u._Fld65835                      as "Район" /*в 1С: КодТорговогоАгента*/
+//     ,u._Description                   as "ТорговыйАгент"
+//     ,u._Fld58675RRef                  as "Подразделение_Key"    
+//     ,s._Description                   as "Подразделение"
+//     ,s._Fld62905RRef                  as "ТекущийРуководитель_Key"
+//     ,f._Description                   as "Руководитель"
+// from      erp._Reference425           as u /*"Спр_Пользователи"*/
+// left join erp._Reference620           as s /*Спр_СтруктураПредприятия*/ 
+//        on u._Fld58675RRef = s._IDRRef  /*Подразделение_Key*/ 
+// left join erp._Reference682           as f /*Спр_ФизическиеЛица*/
+//        on s._Fld62905RRef = f._IDRRef  /*ТекущийРуководитель_Key*/;
+// ;
+// drop field [ТорговыйАгент_Key_Tmp]; //удаляем временное поле
+
+// // Фильтруем inner джойном всех ТорговыйАгент_Key до встречающихся в продажах (бывают те, что оказывается в Спр_Пользователи)
+// join([ТорговыеАгентыPrep])
+// //Concatenate([ТорговыеАгентыPrep]) //вместо concatenate .. where not exists поставил join /*DT 23-10-18*/
+// load distinct [ТорговыйАгент_Key] resident [Основная]
+// //where not exists(ТорговыйАгент_Key) //exists проверяет ТорговыйАгент_Key и в [ТорговыеАгентыPrep], и в загруженной ранее все [Основная], так что not exists здесь режет всё (в т.ч. ТорговыйАгент_Key = 00000000000000000000000000000000)  /*DT 23-10-18*/
+;
+// [ТорговыеАгентыPrep]:
+// // 1. Берём данные из УТ
+// load * from 'lib://Data:DataFiles/2020_2023/ТорговыеАгентыPrep.qvd' (qvd);
+// // 2. Дополняем данными из ERP
+// concatenate([ТорговыеАгентыPrep])
+// select distinct
+//      u._IDRRef                        as "ТорговыйАгент_Key"
+//     ,u._Fld65835                      as "Район" /*в 1С: КодТорговогоАгента*/
+//     ,u._Description                   as "ТорговыйАгент"
+//     ,u._Fld58675RRef                  as "Подразделение_Key"    
+//     ,s._Description                   as "Подразделение"
+//     ,s._Fld62905RRef                  as "ТекущийРуководитель_Key"
+//     ,f._Description                   as "Руководитель"
+// from      erp._Reference425           as u /*"Спр_Пользователи"*/
+// left join erp._Reference620           as s /*Спр_СтруктураПредприятия*/ 
+//        on u._Fld58675RRef = s._IDRRef  /*Подразделение_Key*/ 
+// left join erp._Reference682           as f /*Спр_ФизическиеЛица*/
+//        on s._Fld62905RRef = f._IDRRef  /*ТекущийРуководитель_Key*/;
+// // 3. Джойним всех ТорговыйАгент_Key встречающихся в продажах (бывают те, что оказывается в Спр_Пользователи)
+// join([ТорговыеАгентыPrep])
+// //Concatenate([ТорговыеАгентыPrep]) //вместо concatenate .. where not exists поставил join /*DT 23-10-18*/
+// load distinct [ТорговыйАгент_Key] resident [Основная]
+// //where not exists(ТорговыйАгент_Key) //exists проверяет ТорговыйАгент_Key и в [ТорговыеАгентыPrep], и в загруженной ранее все [Основная], так что not exists здесь режет всё (в т.ч. ТорговыйАгент_Key = 00000000000000000000000000000000)  /*DT 23-10-18*/
+// ;
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+[ТорговыеАгенты]:
+load
+	[ТорговыйАгент_Key],
+    [ТорговыйАгент],    
+    [Подразделение],
+    [Руководитель],
+    [Район],
+	if(wildmatch(Район, '*salon*'),'Салоны',
+		if(wildmatch(Район, '*spec*', '*aptek*', '*arm*'),'Спец','ABC')) as Команда
+resident [ТорговыеАгентыPrep];
+
+concatenate([ТорговыеАгенты])
+ load * inline [
+ ТорговыйАгент_Key, Команда
+ STOCKS, Данные
+ ];
+
+drop table [ТорговыеАгентыPrep];

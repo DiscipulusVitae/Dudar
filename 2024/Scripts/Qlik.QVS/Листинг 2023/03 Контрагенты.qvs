@@ -1,0 +1,93 @@
+LIB CONNECT TO 'Dudar:aasql';
+
+Контрагенты:
+load	*	; 
+SQL select 
+	_IDRRef	 as 	[_Контрагенты]
+	,_Description	 as 	Контрагент
+	,_Fld3294RRef	 as 	[Партнер_Key]
+    
+from "Center_2021".dbo."_Reference135" as Спр_Контрагенты WITH (NOLOCK)
+WHERE _Marked=00; 
+
+DROP FIELD Контрагент;
+
+ПредзагрузкаПартнеров:
+load	*	; 
+SQL select 
+	_IDRRef	 as 	Партнер_Key
+ 	,_Code	 as 	КодКонтрагент
+ 	,_Description	 as 	Контрагент
+ 	,_Fld19896RRef	 as 	Категории_KEY
+ 	,_Fld982887RRef	 as 	СетьКлиента_Key
+    
+    ,_Fld19887 as ПартнерШирота
+    ,_Fld19888 as ПартнерДолгота
+ 
+    
+from	"Center_2021".dbo."_Reference173" as Спр_Партнеры WITH (NOLOCK)
+WHERE _Marked=00; 
+
+left join ([Контрагенты])
+load 
+	Партнер_Key,
+    КодКонтрагент,
+    Контрагент,
+    Категории_KEY,
+    СетьКлиента_Key,
+	GeoMakePoint(ПартнерШирота, ПартнерДолгота) as Координаты
+resident [ПредзагрузкаПартнеров];
+
+DROP TABLE [ПредзагрузкаПартнеров];
+
+left join ([Контрагенты])
+load	*	; 
+SQL select 
+	_IDRRef	 as 	СетьКлиента_Key
+	,_Description	 as 	Сеть
+from	"Center_2021".dbo."_Reference982886" as Спр_СетьКлиентов WITH (NOLOCK); 
+
+Спр_Категории:
+load	*	; 
+SQL select 
+	_IDRRef			 as 	Категории_KEY
+	,_ParentIDRRef	 as 	РодительКатегории_KEY
+    ,_Folder
+	,_Description	 as 	КатегорияКонтрагент
+from	_Reference19893 as Спр_Категории WITH (NOLOCK); 
+
+[КаналыСбыта]:
+mapping load 
+	Категории_KEY,
+	КатегорияКонтрагент as КаналСбыта
+resident [Спр_Категории]
+WHERE _Folder=00;
+
+left Join ([Контрагенты])
+load 
+	Категории_KEY,
+    ApplyMap('КаналыСбыта', РодительКатегории_KEY) as КаналСбыта,
+    КатегорияКонтрагент
+resident [Спр_Категории]
+WHERE _Folder=01;
+
+DROP TABLE Спр_Категории;
+
+DROP FIELDs [СетьКлиента_Key], [Категории_KEY], _Контрагенты;
+
+/*
+left Join ([Контрагенты])
+load	*	; 
+SQL select 
+	_IDRRef	 as 	Категории_KEY
+	,_Description	 as 	КатегорияКонтрагент
+from	"Center_2021".dbo."_Reference19893" as Спр_Категории WITH (NOLOCK); 
+
+[Каналы]:
+LOAD 
+	[КатегорияКонтрагент],
+	[КаналСбыта]
+ FROM [lib://E/КаналыСбыта.xlsx]
+(ooxml, embedded labels, table is Каналы);
+
+DROP FIELDs [СетьКлиента_Key], [Категории_KEY], _Контрагенты;*/

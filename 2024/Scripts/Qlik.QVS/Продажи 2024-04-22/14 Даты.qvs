@@ -1,0 +1,11 @@
+[autoCalendar]: 
+DECLARE FIELD DEFINITION Tagged ('$date')
+FIELDS
+  Dual(Year($1), YearStart($1)) AS [Год] Tagged ('$axis', '$year'),
+  Dual('Q'&Num(Ceil(Num(Month($1))/3)),num(ceil(num(Month($1))/3),00)) AS [Квартал] tagged ('$quarter'),
+  Dual(Year($1)&'-Q'&Num(Ceil(Num(Month($1))/3)),QuarterStart($1)) AS [ГодКвартал] tagged ('$axis', '$yearquarter'),
+  Month($1) AS [Месяц] Tagged ('$month'),
+  Dual(Year($1)&'-'&Month($1), monthstart($1)) AS [ГодМесяц] Tagged ('$axis', '$yearmonth'),
+  Dual('W'&Num(Week($1),00), Num(Week($1),00)) AS [Неделя] Tagged ('$weeknumber'),
+  Date(Floor($1)) AS [Дата] Tagged ('$date');
+DERIVE FIELDS FROM FIELDS [Дата] USING [autoCalendar];

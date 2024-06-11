@@ -1,0 +1,6 @@
+[Филиалы]:
+load	*	; 
+select 
+ 	_IDRRef	 as 	Организация_Key
+ 	,_Description	 as 	Филиал
+from	"Center_2021".dbo."_Reference159" as Спр_Организации with (nolock);

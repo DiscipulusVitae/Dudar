@@ -1,0 +1,18 @@
+[Прогноз.Календарь]:
+select * from _calendar_forecast
+;
+[Прогноз.DaysCount]:
+select * from _calendar_days_count_del
+;
+// Для основного (старого) прогноза (мер)
+let vPastPeriodWorkdayCount     = Peek('workday_count'    , 0, 'Прогноз.DaysCount');
+let vPastPeriodSaturdayEOMCount = Peek('saturdayeom_count', 0, 'Прогноз.DaysCount');
+let vPastPeriodSundayCount      = Peek('sunday_count'     , 0, 'Прогноз.DaysCount');
+let vForecastWorkdayCount       = Peek('workday_count'    , 1, 'Прогноз.DaysCount');
+let vForecastSaturdayEOMCount   = Peek('saturdayeom_count', 1, 'Прогноз.DaysCount');
+let vForecastSundayCount        = Peek('sunday_count'     , 1, 'Прогноз.DaysCount');
+drop table [Прогноз.DaysCount];
+// Для листов прогноза
+let vForecastSumWorkday     = '$'&'(='&'1.0*avg({<[Дата]= {">='&Date(Today()-30)&'<='&Date(Today()-1)&'"},Дата.ТипДня={"Workday"}>} aggr(sum([Сумма]), [Дата]))'&')';
+let vForecastSumSaturdayEOM = '$'&'(='&'1.0*avg({<[Дата]= {">='&Date(Today()-30)&'<='&Date(Today()-1)&'"},Дата.ТипДня={"SaturdayEOM"}>} aggr(sum([Сумма]), [Дата]))'&')';
+let vForecastSumSunday      = '$'&'(='&'1.0*avg({<[Дата]= {">='&Date(Today()-30)&'<='&Date(Today()-1)&'"},Дата.ТипДня={"Sunday"}>} aggr(sum([Сумма]), [Дата]))'&')';

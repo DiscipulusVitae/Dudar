@@ -1,0 +1,201 @@
+left join ([Бренды])
+load * Inline [
+Бренд, REDUCTION_BRAND
+Аванта,71
+Другие,72
+Batiste,73
+'Biomed, Biomio',74
+'Cotton Club',75
+Essity,76
+Indola,77
+LURE,78
+Luxottica,79
+Paclan,80
+Remington,81
+Salamander,82
+SKP,83
+SPLAT,84
+STREP,85
+Tesori,86
+Unicum,87
+Varta,88
+Wash&Go,89
+Lillay,90
+Synergetic,91
+FarmaVita,92
+Ярмарка,93
+Profinish,94
+Profusion,95
+Dole,96
+];
+
+left join ([Филиалы])
+load * Inline [
+Филиал, REDUCTION_CITY
+Актау,1
+Актобе,2
+Алматы,3
+Астана,4
+Атырау,5
+Жезказган,6
+Караганда,7
+Кокшетау,8
+Костанай,9
+Кызылорда,10
+Павлодар,11
+Петропавловск,12
+Семей,13
+Талдыкорган,14
+Тараз,15
+Уральск,16
+Усть-Каменогорск,17
+Шымкент,18
+Экибастуз,19
+];
+
+left join ([Торговые агенты])
+load * Inline [
+Команда, REDUCTION_TEAM
+ABC,1
+Спец,2
+Салоны,3
+Данные,4
+];
+
+Section Access;
+LOAD * inline [
+ACCESS, USER.EMAIL, REDUCTION_CITY, REDUCTION_BRAND, REDUCTION_TEAM, OMIT
+ADMIN,INTERNAL\SA_SCHEDULER,1,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,2,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,3,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,4,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,5,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,6,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,7,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,8,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,9,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,10,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,11,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,12,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,13,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,14,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,15,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,16,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,17,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,18,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,19,*,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,71,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,72,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,73,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,74,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,75,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,76,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,77,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,78,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,79,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,80,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,81,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,82,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,83,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,84,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,85,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,86,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,87,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,88,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,89,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,90,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,91,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,92,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,93,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,94,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,95,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,96,*,
+ADMIN,INTERNAL\SA_SCHEDULER,*,*,1,
+ADMIN,INTERNAL\SA_SCHEDULER,*,*,2,
+ADMIN,INTERNAL\SA_SCHEDULER,*,*,3,
+ADMIN,INTERNAL\SA_SCHEDULER,*,*,4,
+
+ADMIN,s.rozenblat@dudar.kz,*,*,*,
+
+ADMIN,d.tolstobrov@dudar.kz,*,*,*,
+
+USER,l.rozenblat@dudar.kz,*,*,*,
+
+USER,o.rovitskaya@dudar.kz,*,*,*,
+
+USER,k.amanbayeva@dudar.kz,*,*,*,
+
+USER,ye.abenov@dudar.kz,*,*,*,
+
+USER,a.nordgeimer@dudar.kz,3,*,1,
+USER,a.nordgeimer@dudar.kz,3,*,4,
+
+USER,ye.vakulenko@dudar.kz,*,73,*,
+USER,ye.vakulenko@dudar.kz,*,77,*,
+USER,ye.vakulenko@dudar.kz,*,83,*,
+USER,ye.vakulenko@dudar.kz,*,92,*,
+
+USER,y.pavlenko@dudar.kz,*,77,*,
+USER,y.pavlenko@dudar.kz,*,83,*,
+
+USER,v.berkimbayeva@dudar.kz,*,77,3,
+USER,v.berkimbayeva@dudar.kz,*,83,3,
+USER,v.berkimbayeva@dudar.kz,*,92,3,
+USER,v.berkimbayeva@dudar.kz,*,77,4,
+USER,v.berkimbayeva@dudar.kz,*,83,4,
+USER,v.berkimbayeva@dudar.kz,*,92,4,
+
+USER,m.shustova@dudar.kz,*,*,2,
+USER,m.shustova@dudar.kz,*,*,4,
+
+USER,a.golyadkina@dudar.kz,*,*,*,
+
+USER,k.nuriyev@dudar.kz,18,*,1, // шымкент
+USER,k.nuriyev@dudar.kz,15,*,1, // тараз
+USER,k.nuriyev@dudar.kz,10,*,1, // кызылорда
+USER,k.nuriyev@dudar.kz,14,*,1, // талдыкорган
+
+USER,k.nuriyev@dudar.kz,18,*,4, // шымкент
+USER,k.nuriyev@dudar.kz,15,*,4, // тараз
+USER,k.nuriyev@dudar.kz,10,*,4, // кызылорда
+USER,k.nuriyev@dudar.kz,14,*,4, // талдыкорган
+
+
+USER,a.lyukshin@dudar.kz,1,*,1, // Актау
+USER,a.lyukshin@dudar.kz,2,*,1, // Актобе
+USER,a.lyukshin@dudar.kz,5,*,1, // Атырау
+USER,a.lyukshin@dudar.kz,9,*,1, // Костанай
+USER,a.lyukshin@dudar.kz,16,*,1, // Уральск
+
+USER,a.lyukshin@dudar.kz,1,*,4, // Актау
+USER,a.lyukshin@dudar.kz,2,*,4, // Актобе
+USER,a.lyukshin@dudar.kz,5,*,4, // Атырау
+USER,a.lyukshin@dudar.kz,9,*,4, // Костанай
+USER,a.lyukshin@dudar.kz,16,*,4, // Уральск
+
+USER,a.mukanov@dudar.kz,7,*,1, // Караганда
+USER,a.mukanov@dudar.kz,11,*,1, // Павлодар
+USER,a.mukanov@dudar.kz,17,*,1, // Оскемен
+USER,a.mukanov@dudar.kz,13,*,1, // Семей
+USER,a.mukanov@dudar.kz,6,*,1, // Жезказган
+
+USER,a.mukanov@dudar.kz,7,*,4, // Караганда
+USER,a.mukanov@dudar.kz,11,*,4, // Павлодар
+USER,a.mukanov@dudar.kz,17,*,4, // Оскемен
+USER,a.mukanov@dudar.kz,13,*,4, // Семей
+USER,a.mukanov@dudar.kz,6,*,4, // Жезказган
+
+USER,a.shevtsov@dudar.kz,4,*,1, // Астана
+USER,a.shevtsov@dudar.kz,8,*,1, // Кокшетау
+USER,a.shevtsov@dudar.kz,12,*,1, // Петропавловск
+
+USER,a.shevtsov@dudar.kz,4,*,4, // Остатки Астана 
+USER,a.shevtsov@dudar.kz,8,*,4, // Остатки Кокшетау
+USER,a.shevtsov@dudar.kz,12,*,4, // Остатки Петропавловск
+
+USER,brands1@dudar.kz,*,*,*,
+USER,brands2@dudar.kz,*,*,*,
+USER,product1@dudar.kz,*,*,*,
+];
+
+section application;

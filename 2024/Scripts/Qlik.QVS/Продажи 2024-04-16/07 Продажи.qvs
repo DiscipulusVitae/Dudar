@@ -1,0 +1,47 @@
+[Основная]:
+// 1. Загружаем полный набор данных (исторические данные за 2020-2023 и 2024+ из ERP) из готового QVD, подготовленного скриптом
+// [Ежедневная загрузка 1С➡️QVD для приложений] https://dudar.de.qlikcloud.com/script/e41b0fae-ad78-42aa-933d-e4903a3fc773/editor
+load * from 'lib://Data:DataFiles/Продажи.qvd' (qvd);
+//load * from 'lib://Data:DataFiles/Продажи2024.qvd' (qvd);
+// Возвраты 2024+
+[Возвраты]:
+load date(floor([Дата])) as [Дата]    
+	,[Док_Key] //dual([Док_Key]                ,AutoNumber([Док_Key]                       ,'Док_Key'))                          as [Док_Key]
+    ,[ДокНомер]//dual([ДокНомер]               ,AutoNumber([ДокНомер]                      ,'ДокНомер'))                         as [ДокНомер]
+	,[Организация_Key]
+	,[Склад_Key]
+    ,[Партнер_Key]
+    ,[ТорговыйАгент_Key]
+    ,[Номенклатура_Key]
+    ,'Возврат' as [ВидДвижения]
+    ,[ДокументДвижения]
+    ,[Цена]
+    ,[Количество]
+    ,[Сумма]
+    ,[Цена]*[Количество] as [СуммаБазовая]
+;
+select vz._IDRRef                                 as "Док_Key"
+      ,vz._Number                                 as "ДокНомер"
+      ,vz._Date_Time                              as "Дата" /*ДатаДокумента*/
+      ,case when sp._Description like '%_Структурное подразделение'
+            then vz._Fld5330RRef /*"Подразделение_Key"*/ /*при маппинге заменится на Организация_Key, который был в УТ*/
+            else vz._Fld5322RRef /*Организация_Key*/
+       end                                        as "Организация_Key"      
+      ,vz._Fld5328RRef                            as "Склад_Key"
+      ,vz._Fld5323RRef                            as "Партнер_Key"
+      ,vz._Fld67245RRef                           as "ТорговыйАгент_Key" --Дудар_ТорговыйПредставитель
+      ,vzt._Fld5378RRef                           as "Номенклатура_Key"
+      ,'Возврат'                                  as "ВидДвижения"
+      ,vz._Fld5333_RRRef                          as "ДокументДвижения"
+      ,vzt._Fld5385                               as "Цена"
+      ,-vzt._Fld5384                              as "Количество"
+      ,-vzt._Fld5386                              as "Сумма"
+from erp._Document787                                 as vz
+left join erp._Document787_VT5376                     as vzt on vz._IDRRef = vzt._Document787_IDRRef --Док_РеализацияТоваровУслуг.Товары
+left join erp._Reference620                           as sp on sp._IDRRef = vz._Fld5330RRef        --Спр_СтруктураПредприятия
+where vz._date_time >= '2024-01-01'
+  and vz._Marked = false;
+// Присоединяем возвраты к продажам  
+concatenate ([Основная])
+load * resident [Возвраты];
+drop table [Возвраты];

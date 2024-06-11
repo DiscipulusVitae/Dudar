@@ -1,0 +1,267 @@
+SET ThousandSep=' ';
+SET DecimalSep=',';
+SET MoneyThousandSep=' ';
+SET MoneyDecimalSep=',';
+SET MoneyFormat='# ##0₸;-# ##0₸';
+SET TimeFormat='h:mm:ss';
+SET DateFormat='DD.MM.YYYY';
+SET TimestampFormat='DD.MM.YYYY h:mm:ss[.fff]';
+SET FirstWeekDay=0;
+SET BrokenWeeks=1;
+SET ReferenceDay=0;
+SET FirstMonthOfYear=1;
+SET CollationLocale='ru-RU';
+SET MonthNames='янв;фев;мар;апр;май;июн;июл;авг;сен;окт;ноя;дек';
+SET LongMonthNames='Январь;Февраль;Март;Апрель;Май;Июнь;Июль;Август;Сентябрь;Октябрь;Ноябрь;Декабрь';
+SET DayNames='Пн;Вт;Ср;Чт;Пт;Сб;Вс';
+SET LongDayNames='понедельник;вторник;среда;четверг;пятница;суббота;воскресенье';
+
+
+
+[InvoiceNamesMap]:  
+MAPPING LOAD * INLINE [  
+'FromInvoiceName', 'ToInvoiceName'
+'Расходная (кредит)', 'РасходнаяКредит'
+'Расходная (нал)', 'РасходнаяНал'
+'Расходная (БН)', 'РасходнаяБН'
+'Акция (нал)', 'РасходнаяНал'
+'Расходная (реализация)', 'РасходнаяРеализ'
+'Возврат товаров от клиента', 'ПриходнаяНал'
+];
+
+[CityNamesMap]:  
+MAPPING LOAD * INLINE [  
+'FromCityName', 'ToCityName'
+'Усть_Каменогорск', 'Усть-Каменогорск'
+'Дудар Lux Алматы', 'Алматы'
+'Управленческая организация', 'Алматы'
+'ДударЛюкс Алматы', 'Алматы'
+' ТОО "Дудар"', 'Алматы'
+'"Дудар"  ЖНК', 'Алматы'
+'', 'Алматы'
+'Экибастуз', 'Павлодар'
+];
+
+[BrandsMap]:  
+MAPPING LOAD * INLINE [  
+'FromBrandName', 'ToBrandName'
+
+'SPLAT', 'SPLAT'
+'Biomed', 'SPLAT'
+'BioMio', 'SPLAT'
+'Biomed, Biomio', 'SPLAT'
+
+'PACLAN, BRILEO', 'Paclan'
+'PACLAN+BRILEO', 'Paclan'
+'Паклан', 'Paclan'
+'Benckiser', 'Другие'
+'INDOLA', 'Indola'
+'Schwarzkopf Professional', 'SKP'
+'SKPRO', 'SKP'
+'Salamander Professional', 'SLP'
+'Salamander', 'Salamander'
+'VARTA', 'Varta'
+'Remington', 'Remington'
+'UNICUM', 'Unicum'
+'Wash&Go', 'Wash&Go'
+'LEOCREMA', 'Другие'
+'Conter', 'Другие'
+'Vidal', 'Другие'
+'Avanta', 'Аванта'
+
+
+'Cotton Club', 'Cotton Club'
+'SPA COTTON', 'Другие'
+'LURE', 'Другие'
+
+
+'PACLAN', 'Paclan'
+'Бумага, канцелярия', 'Другие'
+'DudarLux', 'Luxottica'
+'Декларации', 'Другие'
+'', 'Другие'
+'ALL', 'Другие'
+'Палеты', 'Другие'
+'Сертификаты', 'Другие'
+'Удаленный товар', 'Другие'
+'IWHITE INSTANT', 'Другие'
+'Поддон', 'Другие'
+'KATRIN', 'Другие'
+'METSA', 'Другие'
+
+'Zewa', 'Essity'
+'TENA', 'Essity'
+'Libresse', 'Essity'
+'Libero', 'Essity'
+
+'Salamander, SLP', 'Salamander'
+'Salamander,SLP', 'Salamander'
+
+'Прочие бренды', 'Другие'
+'Nano Professional', 'Другие'
+'OSRAM', 'Другие'
+'OLYMP', 'Другие'
+'OSRAM Автомобильные лампы', 'Другие'
+'Russell Hobbs', 'Другие'
+'Образцы', 'Другие'
+'GSK', 'Другие'
+'Сотовые телефоны', 'Другие'
+'Tago', 'Другие'
+'Реализация товаров (работ, услуг)', 'Другие'
+'реклама', 'Другие'
+'TAGO', 'Другие'
+
+'Lillay', 'Lillay'
+
+'Synergetic', 'Synergetic'
+
+'Ярмарка', 'Ярмарка'
+
+'Farmavita', 'FarmaVita'
+								
+];
+
+[ExpensesMap]:  
+MAPPING LOAD * INLINE [  
+'FromExpense', 'ToExpense'
+'акция', 'Акции'
+'бонус от объема продаж', 'Ретро-бонус'
+'Бонус от объема продаж', 'Ретро-бонус'
+'Акции', 'Акции'
+'аренда торгового оборудован.', 'Выставленность'
+'Расходы на рекламу', 'Реклама'
+'Сертификация', 'Сертификация'
+'услуги по продвижению товара', 'Реклама'
+'Стикер', 'Стикеровка'
+];
+
+
+
+// [CodesMap]:
+// MAPPING LOAD
+//     КодБух,
+//     КодТорг
+// FROM [lib://E/Контрагенты.xlsx]
+// (ooxml, embedded labels, table is Коды);
+
+
+[DocTypes]:  
+MAPPING LOAD * INLINE [  
+'FromDocType', 'ToDocType'
+'0000016C', 'Отчет реализатора'
+'0000013B', 'Возврат'
+'0000018E', 'Реализация'
+'0000681E', 'Возврат'
+];
+
+
+[RoutesMap]:  
+MAPPING LOAD * INLINE [  
+'FromRoute', 'ToRoute'
+'ALM_BC_MIX_1', 'ALM_BC_A_1'
+'ALM_BC_MIX_3', 'ALM_BC_A_2'
+'ALM_BC_MIX_4', 'ALM_BC_A_3'
+'ALM_BC_MIX_5', 'ALM_BC_A_4'
+'ALM_BC_MIX_6', 'ALM_BC_A_5'
+'ALM_BC_MIX_8', 'ALM_BC_A_6'
+'ALM_BC_RBP_1', 'ALM_BC_B_1'
+'ALM_BC_RBP_3', 'ALM_BC_B_2'
+'ALM_BC_RBP_4', 'ALM_BC_B_3'
+'ALM_BC_RBP_5', 'ALM_BC_B_4'
+'ALM_BC_RBP_6', 'ALM_BC_B_5'
+'ALM_BC_RBP_8', 'ALM_BC_B_6'
+'Alm_Obl_3_MIX', 'Alm_Obl_A_3'
+'Alm_Obl_3_RBP', 'Alm_Obl_B_3'
+'AST_BC_MIX_1', 'AST_BC_A_1'
+'AST_BC_MIX_2', 'AST_BC_A_2'
+'AST_BC_MIX_3', 'AST_BC_A_3'
+'AST_BC_MIX_4', 'AST_BC_A_4'
+'AST_BC_RBP_1', 'AST_BC_B_1'
+'AST_BC_RBP_2', 'AST_BC_B_2'
+'AST_BC_RBP_3', 'AST_BC_B_4'
+'AST_BC_RBP_4', 'AST_BC_B_3'
+'AST_OSDO_MIX', 'AST_OSDO_A'
+'AST_OSDO_RBP', 'AST_OSDO_B'
+'ATR_Obl_1 ATR09', 'ATR_Obl'
+'KAR_BC_MIX_1', 'KAR_BC_A_1'
+'KAR_BC_MIX_2', 'KAR_BC_A_2'
+'KAR_BC_MIX_3', 'KAR_BC_A_3'
+'KAR_BC_RB_2', 'KAR_BC_B_2'
+'KAR_BC_RBP_1', 'KAR_BC_B_1'
+'KAR_BC_RBP_3', 'KAR_BC_B_3'
+'KAR_Reg_MIX', 'KAR_Reg_A'
+'KAR_Reg_RBP', 'KAR_Reg_B'
+'KZL_BC_MIX_1', 'KZL_BC_A_1'
+'KZL_BC_MIX_2', 'KZL_BC_A_2'
+'KZL_BC_RBP_1', 'KZL_BC_B_1'
+'KZL_BC_RBP_2', 'KZL_BC_B_2'
+'PAV_BC_ALL_1', 'PAV_BC_A_1'
+'PAV_BC_MIX_2', 'PAV_BC_A_2'
+'PAV_BC_MIX_3', 'PAV_BC_A_3'
+'PAV_BC_RB_1', 'PAV_BC_B_1'
+'PAV_BC_RB_2', 'PAV_BC_B_2'
+'PAV_BC_RB_3', 'PAV_BC_B_3'
+'TAL_BC_MIX_1', 'TAL_BC_A_1'
+'TAL_BC_MIX_2', 'TAL_BC_A_2'
+'TAL_BC_RBP_1', 'TAL_BC_B_1'
+'TAL_BC_RBP_2', 'TAL_BC_B_2'
+'TAL_Субдистр_Jarkent_ALL', 'TAL_Jarkent_ALL'
+'TAR_BC_MIX_1', 'TAR_BC_A_1'
+'TAR_BC_MIX_2', 'TAR_BC_A_2'
+'TAR_BC_RBP_1', 'TAR_BC_B_1'
+'TAR_BC_RBP_2', 'TAR_BC_B_2'
+'UST_BC_ALL_1', 'UST_BC_B_1'
+'UST_BC_ALL_3', 'UST_BC_ALL_3'
+'UST_BC_MIX_1', 'UST_BC_A_1'
+'UST_BC_MIX_2', 'UST_BC_A_2'
+'UST_BC_PS_2', 'UST_BC_B_2'
+'UST_OSDO_MIX', 'UST_OSDO_A'
+'UST_OSDO_PS', 'UST_OSDO_B'
+'SHI_BC_MIX_1', 'SHI_BC_A_1'
+'SHI_BC_MIX_2', 'SHI_BC_A_2'
+'SHI_BC_MIX_4', 'SHI_BC_A_4'
+'SHI_BC_RBP_1', 'SHI_BC_B_1'
+'SHI_BC_RBP_2', 'SHI_BC_B_2'
+'SHI_BC_RBP_3', 'SHI_BC_B_3'
+'SHI_BC_RBP_4', 'SHI_BC_B_4'
+'SHI_OSDO_MIX', 'SHI_OSDO_A'
+'SHI_OSDO_RBP', 'SHI_OSDO_B'
+'SHI_Reg_Turkestan_ALL', 'SHI_Reg_Turkestan_ALL_1'
+'EKI_BC_ALL_1', 'EKI_BC_A'
+'EKI_BC_ALL_2', 'EKI_BC_B'
+'PAV_Прочие', 'Прочие'
+'PET_Прочие', 'Прочие'
+'TAL_Прочие', 'Прочие'
+'AST_Прочие', 'Прочие'
+'ALM -сотрудники', 'Прочие'
+'AST-сотрудник', 'Прочие'
+'AST сотрудник', 'Прочие'
+'ATU-сотрудник', 'Прочие'
+'EKI_сотрудник', 'Прочие'
+'UST_прочие', 'Прочие'
+'Кокшетау_прочие', 'Прочие'
+'Сотрудник', 'Прочие'
+'PET-сотрудники', 'Прочие'
+'Sem-сотрудники', 'Прочие'
+'TAR_Сотрудники', 'Прочие'
+'сотрудник', 'Прочие'
+'KZL-сотрудник', 'Прочие'
+'ALM-прочие', 'Прочие'
+'SHI_Сотрудник', 'Прочие'
+'прочее', 'Прочие'
+'КОК-Сотрудник', 'Прочие'
+'AKT_Сотрудники', 'Прочие'
+'Tal_Сотрудники', 'Прочие'
+'URA_сотрудник', 'Прочие'
+'PAV_сотрудник', 'Прочие'
+
+];
+
+
+MAP Филиал USING CityNamesMap;
+MAP ВидДвижения USING InvoiceNamesMap;
+MAP Бренд USING BrandsMap;
+MAP ВидыЗатрат USING ExpensesMap;
+MAP ВидДвижения USING DocTypes;
+MAP Район USING RoutesMap;
+// MAP КодБух USING CodesMap;

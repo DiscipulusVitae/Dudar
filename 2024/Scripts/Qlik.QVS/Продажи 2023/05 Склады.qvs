@@ -1,0 +1,16 @@
+ПредзагрузкаСкладов:
+load	*	; 
+select 
+	_IDRRef	 as 	Склад_Key
+ 	,_Description	 as 	Description
+	,_Fld24480RRef	 as 	Дудар_Организация_Key
+from	"Center_2021".dbo."_Reference242" as Спр_Склады with (nolock); 
+
+[Склады]:
+load	[Склад_Key],
+	if(wildmatch([Description], '*основно*'),'Основной',if(wildmatch([Description], '*стикер*'),'Стикеровка',if(wildmatch([Description], '*распродаж*'),'Распродажа',if(wildmatch([Description], '*реклам*'),'Реклама','Другие')))) as [КатегорияСклада],
+	[Description] as [Склад],
+ 	[Дудар_Организация_Key]
+resident ПредзагрузкаСкладов;
+
+drop table ПредзагрузкаСкладов;

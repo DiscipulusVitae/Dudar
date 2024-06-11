@@ -1,0 +1,35 @@
+[УстановкаПланаПродаж]:
+// 1. УТ
+load date(floor([Дата])) as [Дата]
+	,[Организация_Key]
+    ,[ТорговыйАгент_Key]
+    ,[Бренд_Key]
+    ,[План]
+from 'lib://Data:DataFiles/2020_2023/Док_УстановкаПланаПродаж.qvd' (qvd);
+// 2. ERP
+concatenate([УстановкаПланаПродаж])
+load date(floor([Дата])) as [Дата]
+	,[Организация_Key]
+    ,[ТорговыйАгент_Key]
+    ,[Бренд_Key]
+    ,[План]
+;
+select p._Fld32212::date                         as "Дата" /*В 1С: НачалоПериода*/
+     ,case when sp._Description like '%_Структурное подразделение'
+            then p._Fld32209RRef /*"Подразделение_Key"*/ /*при маппинге заменится на Организация_Key, который был в УТ*/
+            else u._Fld67183RRef /*Дудар_Организация*/
+       end                                       as "Организация_Key"
+     --,p._Fld32209RRef                          as "Подразделение_Key"
+     ,pv._Fld32244RRef                           as "ТорговыйАгент_Key"
+     ,pv._Fld32234RRef                           as "Бренд_Key"
+     ,pv._Fld32236                               as "План" /* В 1С: Cумма */
+from      erp._Document1226_VT32232              as pv /*Документ.ПланПродажПоБрендам.ТабличнаяЧасть.Бренды*/
+left join erp._Document1226 /*Документ.ПланПродажПоБрендам*/ as p on pv._Document1226_IDRRef = p._IDRRef
+left join erp._Reference425 /*Спр_Пользователи */            as u on u._IDRRef = pv._Fld32244RRef /*КодТорговогоАгента*/       
+left join erp._Reference620/*Спр_СтруктураПредприятия*/     as sp on sp._IDRRef = p._Fld32209RRef /*Подразделение_Key*/       
+where p._Fld32212 /*НачалоПериода*/ >= '2024-01-01'
+  and p._Marked=false;
+// 3. Присоеединяем к основной
+concatenate([Основная])
+load * resident [УстановкаПланаПродаж];
+drop table [УстановкаПланаПродаж];

@@ -1,0 +1,8 @@
+// 1. Берём данные из УТ
+[Филиалы]:
+load * from 'lib://Data:DataFiles/2020_2023/Спр_Организации.qvd' (qvd);
+// 2. Дополняем данными из ERP
+/*concatenate([Филиалы])
+select _IDRRef	    as "Организация_Key"
+ 	  ,_Description as "Филиал"
+from erp._Reference339  as "Спр_Организации";*/

@@ -1,0 +1,43 @@
+[Остатки]:
+load	*	; 
+SQL SELECT
+	_Fld19038RRef 	as Склад_Key,
+    _Fld19035RRef 	as Номенклатура_Key,
+    _Fld19041 		as ОстатокШтуки
+from	"Center_2021".dbo."_AccumRgT19044" as РН_ТоварыНаСкладах_Итоги WITH (NOLOCK); 
+
+
+
+left join ([Остатки])
+Load
+[Дудар_Организация_Key] as [Организация_Key],
+[Склад_Key] 
+Resident Склады;
+
+left join ([Остатки])
+Load
+[Номенклатура_Key],
+[ЦенаБазовая] as БЦ
+resident Номенклатура;
+
+
+
+Concatenate([Основная])
+load *,
+[ОстатокШтуки]*БЦ as ОстатокСумма
+resident Остатки;
+
+
+
+DROP TABLE Остатки;
+
+drop Field [Дудар_Организация_Key],БЦ;
+
+
+left join ([Основная])
+Load 
+[Номенклатура_Key],
+"Марка_Key" as Бренд_Key
+resident Номенклатура;
+
+
